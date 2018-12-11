@@ -1,5 +1,9 @@
 const axiosist = require('axiosist')
-const server = require('./server')
+const { server, db } = require('./server')
+
+beforeEach(function() {
+  db.reset()
+})
 
 test('GET /users lists user and POST /users creates user', () => {
   return axiosist(server).get('/users')

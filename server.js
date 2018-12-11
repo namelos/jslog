@@ -15,11 +15,17 @@ server.post('/users', (request, response) => {
 })
 
 const db = {
-  users: []
+  users: [],
+  reset: function() {
+    db.users = []
+  }
 }
 
 function User(params) {
   return { username: params.username }
 }
 
-module.exports = server
+module.exports = {
+  server,
+  db
+}

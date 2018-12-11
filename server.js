@@ -1,6 +1,5 @@
 const express = require('express')
 const sqlite = require('sqlite')
-const Bundler = require('parcel-bundler')
 
 const server = express()
 server.use(express.json())
@@ -17,7 +16,6 @@ const dbPromise = sqlite.open(':memory:')
   })
   .catch(console.log)
 
-
 server.get('/users', (request, response) => {
   return userRepository.all()
     .then(results => response.json(results))
@@ -28,9 +26,6 @@ server.post('/users', (request, response) => {
   return userRepository.insert(user)
     .then(x => response.json(x))
 })
-
-const bundler = new Bundler('./public/index.html')
-server.use(bundler.middleware())
 
 function User(params) {
   return { username: params.username }

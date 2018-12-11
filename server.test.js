@@ -1,14 +1,6 @@
 const axiosist = require('axiosist')
 const server = require('./server')
 
-test('/hello returns hello', () => {
-  return axiosist(server).get('/hello')
-    .then(response => {
-      expect(response.status).toBe(200)
-      expect(response.data).toBe('hello')
-    })
-})
-
 test('GET /users lists user and POST /users creates user', () => {
   return axiosist(server).get('/users')
     .then(response => {

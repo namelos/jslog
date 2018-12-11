@@ -1,6 +1,7 @@
 const React = require('react')
 const ReactDOM = require('react-dom')
 const axios = require('axios')
+const Hello = require('./Hello')
 
 const api = {
   getUsers: function() {
@@ -15,6 +16,4 @@ const api = {
   }
 }
 
-ReactDOM.render(<p>hi</p>, document.querySelector('#root'))
-
-window.api = api
+ReactDOM.render(<Hello />, document.querySelector('#root'))

@@ -1,5 +1,6 @@
 const axiosist = require('axiosist')
-const { server, userRepository } = require('./server')
+const { server } = require('./server')
+const { userRepository } = require('./repositories')
 
 afterEach(() => {
   return userRepository.clear()

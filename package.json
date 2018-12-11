@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.16.4",
+    "sqlite": "^3.0.0"
   },
   "devDependencies": {
     "axiosist": "^0.1.1",

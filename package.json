@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js --ignore ./dist",
+    "test": "jest --watch"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "axiosist": "^0.1.1",
     "jest": "^23.6.0",
+    "nodemon": "^1.18.8",
     "parcel-bundler": "^1.10.3"
   }
 }

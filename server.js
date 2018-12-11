@@ -4,13 +4,13 @@ const sqlite = require('sqlite')
 const server = express()
 const dbPromise = sqlite.open(':memory:')
   .then(db => {
-    db.run(`
+    return db.run(`
       CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username VARCHAR(255) NOT NULL
       )
     `)
-    return db
+    .then(() => db)
   })
   .catch(console.log)
 
@@ -45,9 +45,14 @@ const userRepository = {
     return dbPromise
       .then(db => db.run(`INSERT INTO users (username) VALUES (?)`, user.username))
       .then(result => userRepository.get(result.stmt.lastID))
+  },
+  clear: function() {
+    return dbPromise
+      .then(db => db.run(`DELETE FROM users`))
   }
 }
 
 module.exports = {
-  server
+  server,
+  userRepository
 }

@@ -1,3 +1,5 @@
+const React = require('react')
+const ReactDOM = require('react-dom')
 const axios = require('axios')
 
 const api = {
@@ -12,5 +14,7 @@ const api = {
       .then(() => api.getUsers())
   }
 }
+
+ReactDOM.render(<p>hi</p>, document.querySelector('#root'))
 
 window.api = api

@@ -59,6 +59,12 @@ const sessionRepository = {
       DELETE FROM sessions
       where userId = ?
     `, userId)
+  },
+  clear: function() {
+    return database.run(`
+      DELETE FROM sessions
+      where userId = ?
+    `)
   }
 }
 

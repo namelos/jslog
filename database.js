@@ -8,6 +8,14 @@ const dbPromise = sqlite.open(':memory:')
         username VARCHAR(255) NOT NULL
       )
     `)
+    .then(() => {
+      db.run(`
+      CREATE TABLE IF NOT EXISTS sessions (
+        id VARCHAR(255) NOT NULL,
+        userId INTEGER NOT NULL
+      )
+      `)
+    })
     .then(() => db)
   })
   .catch(console.log)

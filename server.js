@@ -66,6 +66,20 @@ server.post('/todos', async (request, response) => {
   return response.json(todo)
 })
 
+server.put('/todos/:id', async (request, response) => {
+  const sessionId = request.headers.authorization
+  if (!sessionId) return response.status(401).send('Please login')
+  const session = await sessionRepository.get(sessionId)
+  if (!session) return response.status(404).send('Session not found')
+
+  let todo = await todoRepository.get(request.params.id)
+  if (!todo) return response.status(404).send('Todo not found')
+  todo.content = request.body.content
+  todo.completed = request.body.completed
+  todo = await todoRepository.update(todo)
+  return response.json(todo)
+})
+
 function Todo({ content, userId }) {
   return { content, userId }
 }

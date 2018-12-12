@@ -84,6 +84,16 @@ const todoRepository = {
     `, todo.content, todo.userId)
     return await todoRepository.get(result.stmt.lastID)
   },
+  async update(todo) {
+    const completed = todo.completed ? 1 : 0
+    const result = await database.run(`
+      UPDATE todos
+        set content = ?,
+            completed = ?
+      WHERE id = ?
+    `, todo.content, completed, todo.id)
+    return await todoRepository.get(todo.id)
+  },
   async clear() {
     return await database.run(`DELETE FROM todos`)
   }

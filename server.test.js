@@ -127,6 +127,32 @@ async function createTodo(content, session) {
   return todo
 }
 
+test('PUT /todos/:id updates the todo', async () => {
+  const user = await createUser('John')
+  const session = await loginUser(user)
+  const todo = await createTodo('Learn Node.js', session)
+
+  response = await axiosist(server).get('/todos', getHeaders(session))
+  expect(response.status).toBe(200)
+  let todos = response.data
+  expect(todos.length).toBe(1)
+  expect(todos[0].content).toBe('Learn Node.js')
+  expect(todos[0].completed).toBe(false)
+
+  let response = await axiosist(server).put(`/todos/${todo.id}`, {
+    content: 'Learn React.js',
+    completed: true
+  }, getHeaders(session))
+  expect(response.status).toBe(200)
+
+  response = await axiosist(server).get('/todos', getHeaders(session))
+  expect(response.status).toBe(200)
+  todos = response.data
+  expect(todos.length).toBe(1)
+  expect(todos[0].content).toBe('Learn React.js')
+  expect(todos[0].completed).toBe(true)
+})
+
 async function loginUser(user) {
   let response = await axiosist(server).post('/session', { username: user.username })
   expect(response.status).toBe(200)

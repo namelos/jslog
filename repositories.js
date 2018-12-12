@@ -57,7 +57,47 @@ const sessionRepository = {
   }
 }
 
+const todoRepository = {
+  async all() {
+    const todos = await database.all(`SELECT * FROM todos`)
+    return todos.map(todoFromDB)
+  },
+  async allByUser(userId) {
+    const todos = await database.all(`
+      SELECT * FROM todos
+      where userId = ?
+    `, userId)
+    return todos.map(todoFromDB)
+  },
+  async get(id) {
+    const todo = await database.get(`
+      SELECT * FROM todos
+      where id = ?
+    `, id)
+    return todoFromDB(todo)
+  },
+  async insert(todo) {
+    const result = await database.run(`
+      INSERT INTO todos
+        (content, userId)
+      VALUES (?, ?)
+    `, todo.content, todo.userId)
+    return await todoRepository.get(result.stmt.lastID)
+  },
+  async clear() {
+    return await database.run(`DELETE FROM todos`)
+  }
+}
+
+function todoFromDB(todo) {
+  if (!todo) return todo
+  if (todo.completed === 1) todo.completed = true
+  else todo.completed = false
+  return todo
+}
+
 module.exports = {
   userRepository,
-  sessionRepository
+  sessionRepository,
+  todoRepository
 }

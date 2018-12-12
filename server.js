@@ -1,5 +1,9 @@
 const express = require('express')
-const { userRepository, sessionRepository } = require('./repositories')
+const { 
+  userRepository,
+  sessionRepository,
+  todoRepository
+} = require('./repositories')
 
 const server = express()
 server.use(express.json())
@@ -37,6 +41,34 @@ server.delete('/session', async (request, response) => {
   await sessionRepository.delete(session.userId)
   return response.json(session)
 })
+
+server.get('/todos', async (request, response) => {
+  const sessionId = request.headers.authorization
+  if (!sessionId) return response.status(401).send('Please login')
+  const session = await sessionRepository.get(sessionId)
+  if (!session) return response.status(404).send('Session not found')
+  
+  const todos = await todoRepository.allByUser(session.userId)
+  response.json(todos)
+})
+
+server.post('/todos', async (request, response) => {
+  const sessionId = request.headers.authorization
+  if (!sessionId) return response.status(401).send('Please login')
+  const session = await sessionRepository.get(sessionId)
+  if (!session) return response.status(404).send('Session not found')
+
+  const todo = await todoRepository.insert(Todo({
+    content: request.body.content,
+    userId: session.userId
+  }))
+  
+  return response.json(todo)
+})
+
+function Todo({ content, userId }) {
+  return { content, userId }
+}
 
 function User(params) {
   return { username: params.username }

@@ -98,10 +98,38 @@ test('POST /todos creates todo while GET /todos lists todo for user', async () =
   expect(todos[0].id).toBe(todo.id)
 })
 
+test('GET /todos must not return todos from other users', async () => {
+  const john = await createUser('John')
+  const johnSession = await loginUser(john)
+
+  const jane = await createUser('Jane')
+  const janeSession = await loginUser(jane)
+
+  const todoFromJohn = await createTodo('Learn Node.js', johnSession)
+  await createTodo('Learn React.js', janeSession)
+
+  let response = await axiosist(server).get('/todos', getHeaders(johnSession))
+  expect(response.status).toBe(200)
+  let todos = response.data
+  expect(todos.length).toBe(1)
+  expect(todos[0].content).toBe(todoFromJohn.content)
+  expect(todos[0].completed).toBe(todoFromJohn.completed)
+  expect(todos[0].id).toBe(todoFromJohn.id)
+})
+
 function getHeaders(session) {
   return {
     headers: { authorization: session.id }
   }
+}
+
+async function createTodo(content, session) {
+  let response = await axiosist(server).post('/todos', { content }, getHeaders(session))
+  expect(response.status).toBe(200)
+  const todo = response.data
+  expect(todo.content).toBe(content)
+  expect(todo.completed).toBe(false)
+  return todo
 }
 
 async function loginUser(user) {

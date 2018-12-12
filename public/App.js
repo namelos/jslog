@@ -1,4 +1,5 @@
 const React = require('react')
+const { SessionContext } = require('./contexts')
 const UserApp = require('./UserApp')
 const Login = require('./Login')
 const TodoApp = require('./TodoApp')
@@ -6,15 +7,15 @@ const TodoApp = require('./TodoApp')
 function App() {
   const [session, setSession] = React.useState([])
 
-  return <div>
+  return <SessionContext.Provider value={session}>
     {
       session && session.id ?
-      <TodoApp session={session} /> :
+      <TodoApp /> :
       <Login setSession={setSession} />
     }
     <hr />
     <UserApp />
-  </div>
+  </SessionContext.Provider>
 }
 
 module.exports = App

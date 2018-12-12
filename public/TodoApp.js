@@ -1,10 +1,12 @@
 const React = require('react')
 const axios = require('axios')
+const { SessionContext } = require('./contexts')
 const { getHeaders } = require('../common')
 
-function TodoApp({ session }) {
+function TodoApp() {
   const [todos, setTodos] = React.useState([])
   const [contentInput, setContentInput] = React.useState('')
+  const session = React.useContext(SessionContext)
 
   React.useEffect(() => {
     fetchTodos()
@@ -24,21 +26,31 @@ function TodoApp({ session }) {
   }
 
   return <div>
-    <Todos todos={todos} />
+    <Todos todos={todos} fetchTodos={fetchTodos} />
     <input onChange={e => setContentInput(e.target.value)} value={contentInput}/>
     <button onClick={handleClick}>create todo</button>
   </div>
 }
 
-function Todos({ todos }) {
+function Todos({ todos, fetchTodos }) {
   return <ul>
-    {todos.map((todo, i) => <Todo {...todo} key={i} />)}
+    {todos.map((todo, i) => <Todo {...todo} fetchTodos={fetchTodos} key={i} />)}
   </ul>
 }
 
-function Todo({ content, completed }) {
+function Todo({ id, content, completed, fetchTodos }) {
+  const session = React.useContext(SessionContext)
+
+  async function handleChange() {
+    await axios.put(`/todos/${id}`, {
+      content,
+      completed: !completed
+    }, getHeaders(session))
+    await fetchTodos()
+  }
+
   return <div>
-    <input type="checkbox" checked={completed} onChange={() => {}} />
+    <input type="checkbox" checked={completed} onChange={handleChange} />
     <span>{content}</span>
   </div>
 }

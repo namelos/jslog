@@ -1,4 +1,5 @@
 const axiosist = require('axiosist')
+const { getHeaders } = require('./common')
 const { server } = require('./server')
 const {
   userRepository,
@@ -116,12 +117,6 @@ test('GET /todos must not return todos from other users', async () => {
   expect(todos[0].completed).toBe(todoFromJohn.completed)
   expect(todos[0].id).toBe(todoFromJohn.id)
 })
-
-function getHeaders(session) {
-  return {
-    headers: { authorization: session.id }
-  }
-}
 
 async function createTodo(content, session) {
   let response = await axiosist(server).post('/todos', { content }, getHeaders(session))

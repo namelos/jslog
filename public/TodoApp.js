@@ -37,7 +37,10 @@ function Todos({ todos }) {
 }
 
 function Todo({ content, completed }) {
-  return <p>{content}</p>
+  return <div>
+    <input type="checkbox" checked={completed} onChange={() => {}} />
+    <span>{content}</span>
+  </div>
 }
 
 module.exports = TodoApp

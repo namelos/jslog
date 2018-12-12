@@ -9,7 +9,6 @@ function Login({ setSession }) {
       const result = await axios.post('/session', { username: nameInput })
       const session = result.data
       setSession(session)
-      setNameInput('')
     }
   }
 

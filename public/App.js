@@ -7,9 +7,11 @@ function App() {
   const [session, setSession] = React.useState([])
 
   return <div>
-    <TodoApp session={session} />
-    <hr />
-    <Login setSession={setSession} />
+    {
+      session && session.id ?
+      <TodoApp session={session} /> :
+      <Login setSession={setSession} />
+    }
     <hr />
     <UserApp />
   </div>

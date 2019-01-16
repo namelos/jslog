@@ -6,21 +6,23 @@ const { getHeaders } = require('../common')
 function TodoApp() {
   const [todos, setTodos] = React.useState([])
   const [contentInput, setContentInput] = React.useState('')
-  const session = React.useContext(SessionContext)
+  const sessionId = React.useContext(SessionContext)
 
   React.useEffect(() => {
     fetchTodos()
   }, [])
 
   function fetchTodos() {
-    return axios.get('/todos', getHeaders(session))
-      .then(response => setTodos(response.data))
+    return axios.get('/todos', {
+      headers: { authorization: sessionId }
+    }).then(response => setTodos(response.data))
   }
 
   async function handleClick() {
     if (contentInput) {
-      axios.post('/todos', { content: contentInput }, getHeaders(session))
-        .then(fetchTodos)
+      axios.post('/todos', { content: contentInput }, {
+        headers: { authorization: sessionId }
+      }).then(fetchTodos)
       setContentInput('')
     }
   }

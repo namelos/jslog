@@ -1,14 +1,14 @@
 const React = require('react')
 const axios = require('axios')
 
-function Login({ setSession }) {
+function Login({ setSessionId }) {
   const [nameInput, setNameInput] = React.useState('')
 
   async function handleClick() {
     if (nameInput) {
       const result = await axios.post('/session', { username: nameInput })
       const session = result.data
-      setSession(session)
+      setSessionId(session.id)
     }
   }
 

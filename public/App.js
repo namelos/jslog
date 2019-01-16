@@ -5,13 +5,13 @@ const Login = require('./Login')
 const TodoApp = require('./TodoApp')
 
 function App() {
-  const [session, setSession] = React.useState([])
+  const [sessionId, setSessionId] = React.useState(null)
 
-  return <SessionContext.Provider value={session}>
+  return <SessionContext.Provider value={sessionId}>
     {
-      session && session.id ?
+      sessionId ?
       <TodoApp /> :
-      <Login setSession={setSession} />
+      <Login setSessionId={setSessionId} />
     }
     <hr />
     <UserApp />

@@ -1,7 +1,7 @@
-const express = require('express')
-const { userRepository } = require('./repositories')
+import express from 'express'
+import { userRepository } from './repositories'
 
-const userApp = express.Router()
+export const userApp = express.Router()
 
 userApp.get('/', (request, response) => {
   return userRepository.all()
@@ -17,5 +17,3 @@ userApp.post('/', (request, response) => {
 function User({ username }) {
   return { username }
 }
-
-module.exports = userApp

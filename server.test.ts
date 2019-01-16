@@ -1,11 +1,12 @@
-const axiosist = require('axiosist')
-const { getHeaders } = require('./common')
-const { server } = require('./server')
-const {
-  userRepository,
-  sessionRepository,
-  todoRepository
-} = require('./repositories')
+import axiosist from 'axiosist'
+import { server } from './server'
+import { userRepository, sessionRepository, todoRepository } from './repositories'
+
+function getHeaders(session) {
+  return {
+    headers: { authorization: session.id }
+  }
+}
 
 afterEach(async () => {
   await userRepository.clear()
@@ -132,14 +133,14 @@ test('PUT /todos/:id updates the todo', async () => {
   const session = await loginUser(user)
   const todo = await createTodo('Learn Node.js', session)
 
-  response = await axiosist(server).get('/todos', getHeaders(session))
+  let response = await axiosist(server).get('/todos', getHeaders(session))
   expect(response.status).toBe(200)
   let todos = response.data
   expect(todos.length).toBe(1)
   expect(todos[0].content).toBe('Learn Node.js')
   expect(todos[0].completed).toBe(false)
 
-  let response = await axiosist(server).put(`/todos/${todo.id}`, {
+  response = await axiosist(server).put(`/todos/${todo.id}`, {
     content: 'Learn React.js',
     completed: true
   }, getHeaders(session))

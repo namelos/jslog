@@ -1,7 +1,7 @@
 const uuid = require('uuid/v4')
 const database = require('./database')
 
-const userRepository = {
+export const userRepository = {
   async all() {
     return await database.all(`SELECT * FROM users`)
   },
@@ -30,7 +30,7 @@ const userRepository = {
   }
 }
 
-const sessionRepository = {
+export const sessionRepository = {
   async get(id) {
     return await database.get(`
       SELECT * FROM sessions
@@ -57,7 +57,7 @@ const sessionRepository = {
   }
 }
 
-const todoRepository = {
+export const todoRepository = {
   async all() {
     const todos = await database.all(`SELECT * FROM todos`)
     return todos.map(todoFromDB)
@@ -104,10 +104,4 @@ function todoFromDB(todo) {
   if (todo.completed === 1) todo.completed = true
   else todo.completed = false
   return todo
-}
-
-module.exports = {
-  userRepository,
-  sessionRepository,
-  todoRepository
 }

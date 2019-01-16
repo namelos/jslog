@@ -1,8 +1,8 @@
-const express = require('express')
-const { userRepository, sessionRepository } = require('./repositories')
-const { authorizationMiddleware } = require('./middlewares')
+import express from 'express'
+import { userRepository, sessionRepository } from './repositories'
+import { authorizationMiddleware } from './middlewares'
 
-const sessionApp = express.Router()
+export const sessionApp = express.Router()
 
 sessionApp.post('/', async (request, response) => {
   const user = await userRepository.getByUsername(request.body.username)
@@ -14,12 +14,11 @@ sessionApp.post('/', async (request, response) => {
 sessionApp.use(authorizationMiddleware)
 
 sessionApp.get('/', async (request, response) => {
-  response.json(request.session)
+  response.json(request['session'])
 })
 
 sessionApp.delete('/', async (request, response) => {
-  await sessionRepository.delete(request.session.userId)
-  return response.json(request.session)
+  await sessionRepository.delete(request['session'].userId)
+  return response.json(request['session'])
 })
 
-module.exports = sessionApp

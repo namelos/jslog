@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js --ignore ./dist",
+    "start": "ts-node-dev index.ts",
     "test": "jest --watch"
   },
   "keywords": [],
@@ -19,6 +19,8 @@
     "sqlite": "^3.0.0"
   },
   "devDependencies": {
+    "@types/express": "^4.16.0",
+    "@types/jest": "^23.3.12",
     "axiosist": "^0.1.1",
     "babel-core": "^6.26.3",
     "babel-jest": "^23.6.0",
@@ -29,6 +31,12 @@
     "jest": "^23.6.0",
     "nodemon": "^1.18.8",
     "parcel-bundler": "^1.10.3",
+    "ts-jest": "^23.10.5",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "typescript": "^3.2.2",
     "uuid": "^3.3.2"
+  },
+  "jest": {
+    "preset": "ts-jest"
   }
 }

@@ -1,7 +1,10 @@
 const express = require('express')
 const { todoRepository } = require('./repositories')
+const { authorizationMiddleware } = require('./middlewares')
 
 const todoApp = express.Router()
+
+todoApp.use(authorizationMiddleware)
 
 todoApp.use(async (request, response, next) => {
   if (!request.sessionId) return response.status(401).send('Please login')
@@ -10,17 +13,11 @@ todoApp.use(async (request, response, next) => {
 })
 
 todoApp.get('/', async (request, response) => {
-  if (!request.sessionId) return response.status(401).send('Please login')
-  if (!request.session) return response.status(404).send('Session not found')
-
   const todos = await todoRepository.allByUser(request.session.userId)
   response.json(todos)
 })
 
 todoApp.post('/', async (request, response) => {
-  if (!request.sessionId) return response.status(401).send('Please login')
-  if (!request.session) return response.status(404).send('Session not found')
-
   const todo = await todoRepository.insert(Todo({
     content: request.body.content,
     userId: request.session.userId

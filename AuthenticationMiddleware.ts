@@ -9,3 +9,4 @@ export class AuthenticationMiddleware implements ExpressMiddlewareInterface {
     next()
   }
 }
+

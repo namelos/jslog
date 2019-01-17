@@ -1,5 +1,5 @@
 import { Get, JsonController, Post, Req } from 'routing-controllers'
-import { userRepository } from './repositories'
+import { userRepository } from '../repositories'
 
 @JsonController('/users')
 export class UserController {

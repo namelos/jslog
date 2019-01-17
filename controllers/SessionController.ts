@@ -1,6 +1,6 @@
 import { Delete, Get, JsonController, Post, Req, Res, UseBefore } from 'routing-controllers'
-import { AuthorizationMiddleware } from './AuthorizationMiddleware'
-import { sessionRepository, userRepository } from './repositories'
+import { AuthorizationMiddleware } from '../middlewares/AuthorizationMiddleware'
+import { sessionRepository, userRepository } from '../repositories'
 
 @JsonController('/session')
 export class SessionController {

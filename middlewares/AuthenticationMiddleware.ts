@@ -1,5 +1,5 @@
 import { ExpressMiddlewareInterface, Middleware } from 'routing-controllers'
-import { sessionRepository } from './repositories'
+import { sessionRepository } from '../repositories'
 
 @Middleware({ type: 'before' })
 export class AuthenticationMiddleware implements ExpressMiddlewareInterface {

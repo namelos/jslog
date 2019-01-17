@@ -1,5 +1,5 @@
 import { Get, JsonController, Post, Put, Req, Res } from 'routing-controllers'
-import { todoRepository } from './repositories'
+import { todoRepository } from '../repositories'
 
 @JsonController('/todos')
 export class TodoController {

@@ -1,10 +1,10 @@
 import 'reflect-metadata'
 import { createExpressServer } from 'routing-controllers'
-import { AuthenticationMiddleware } from './AuthenticationMiddleware'
-import { JsonMiddleware } from './JsonMiddleware '
-import { SessionController } from './SessionController'
-import { TodoController } from './TodoController'
-import { UserController } from './UserController'
+import { AuthenticationMiddleware } from './middlewares/AuthenticationMiddleware'
+import { SessionController } from './controllers/SessionController'
+import { TodoController } from './controllers/TodoController'
+import { UserController } from './controllers/UserController'
+import { JsonMiddleware } from './middlewares/JsonMiddleware '
 
 export const server = createExpressServer({
   controllers: [UserController, SessionController, TodoController],

@@ -1,6 +1,6 @@
 import axiosist from 'axiosist'
-import { server } from './server'
-import { userRepository, sessionRepository, todoRepository } from './repositories'
+import { Connection } from 'typeorm'
+import { connectToDatabase, createServer, } from './server'
 
 function getHeaders(session) {
   return {
@@ -8,33 +8,41 @@ function getHeaders(session) {
   }
 }
 
-afterEach(async () => {
-  await userRepository.clear()
-  await sessionRepository.clear()
-  await todoRepository.clear()
+let connection: Connection
+let server
+
+beforeAll(async () => {
+  connection = await connectToDatabase()
+  server = createServer()
 })
 
-test('GET /users lists user and POST /users creates user', () => {
-  return axiosist(server).get('/users')
-    .then(response => {
-      expect(response.status).toBe(200)
-      expect(response.data).toEqual([])
+beforeEach(async () => {
+  await connection.dropDatabase()
+  await connection.synchronize()
+})
 
-      return axiosist(server).post('/users', { username: 'John' })
-    })
-    .then(response => {
-      expect(response.status).toBe(200)
-      const user = response.data
-      expect(user.username).toBe('John')
+afterAll(async () => {
+  await connection.close()
+})
 
-      return axiosist(server).get('/users')
-    })
-    .then(response => {
-      expect(response.status).toBe(200)
-      expect(response.data.length).toBe(1)
-      const user = response.data[0]
-      expect(user.username).toBe('John')
-    })
+test('GET /users lists user and POST /users creates user', async () => {
+  let response = await axiosist(server).get('/users')
+
+  expect(response.status).toBe(200)
+  expect(response.data).toEqual([])
+
+  response = await axiosist(server).post('/users', { username: 'John' })
+
+  expect(response.status).toBe(200)
+  let user = response.data
+  expect(user.username).toBe('John')
+
+  response = await axiosist(server).get('/users')
+
+  expect(response.status).toBe(200)
+  expect(response.data.length).toBe(1)
+  user = response.data[0]
+  expect(user.username).toBe('John')
 })
 
 test('POST /session logs user in and DELETE /session logs user out', async () => {
@@ -50,12 +58,12 @@ test('POST /session logs user in and DELETE /session logs user out', async () =>
   let response = await axiosist(server).post('/session', { username: 'John' })
   expect(response.status).toBe(200)
   let session = response.data
-  expect(session.userId).toBe(user.id)
+  expect(session.user.id).toBe(user.id)
 
   response = await axiosist(server).get('/session', getHeaders(session))
   expect(response.status).toBe(200)
   session = response.data
-  expect(session.userId).toBe(user.id)
+  expect(session.user.id).toBe(user.id)
 
   response = await axiosist(server).delete('/session', getHeaders(session))
   expect(response.status).toBe(200)
@@ -158,7 +166,7 @@ async function loginUser(user) {
   let response = await axiosist(server).post('/session', { username: user.username })
   expect(response.status).toBe(200)
   let session = response.data
-  expect(session.userId).toBe(user.id)
+  expect(session.user.id).toBe(user.id)
   return session
 }
 
